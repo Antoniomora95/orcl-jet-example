@@ -1,38 +1,68 @@
 import * as AccUtils from "../accUtils";
+import * as ko from "knockout";
+import * as bootstrap from "ojs/ojbootstrap";
+
+import { FormLayoutElement } from "ojs/ojformlayout";
+import { CheckboxsetElement } from "ojs/ojcheckboxset";
+import { OptionElement } from "ojs/ojoption";
+import 'ojs/ojbutton';
+import ArrayDataProvider = require("ojs/ojarraydataprovider");
+import { ojButtonEventMap } from "ojs/ojbutton";
+
 class DashboardViewModel {
+  private currentId: ko.Observable<number>;
+  private checkList: ko.ObservableArray<{}>;
+  dataProvider: any;
+
 
   constructor() {
+    this.checkList = ko.observableArray([
+      { id: 1, value: "laptop" },
+      { id: 2, value: "tablet" },
+      { id: 3, value: "smartphone" },
+    ]);
+    this.currentId = ko.observable(0)
 
+    this.dataProvider = new ArrayDataProvider(this.checkList, {
+      keyAttributes: "id",
+    });
+
+    this.clickEvent = this.clickEvent.bind(this)
   }
 
-  /**
-   * Optional ViewModel method invoked after the View is inserted into the
-   * document DOM.  The application can put logic that requires the DOM being
-   * attached here.
-   * This method might be called multiple times - after the View is created
-   * and inserted into the DOM and after the View is reconnected
-   * after being disconnected.
-   */
+
+
   connected(): void {
-    AccUtils.announce("Dashboard page loaded.");
+    // call this when loaded
+    this.setCurrentId();
     document.title = "Dashboard module";
-    // implement further logic if needed
   }
 
-  /**
-   * Optional ViewModel method invoked after the View is disconnected from the DOM.
-   */
-  disconnected(): void {
-    // implement if needed
+
+  setCurrentId(){
+    // length will change in the second attempt so use it only once
+    let length = this.checkList().length;
+    let currentId = this.currentId();
+
+    currentId === 0 ? (this.currentId(length)) : this.currentId ( currentId +1 );
+    console.log('executed', this.currentId())
+  }
+length
+  public clickEvent(event: ojButtonEventMap['ojAction']) {
+    this.setCurrentId();
+  }
+  getCurrentId() {
+    console.log('i think it is executed a lot')
+    return this.currentId;
   }
 
-  /**
-   * Optional ViewModel method invoked after transition to the new View is complete.
-   * That includes any possible animation between the old and the new View.
-   */
-  transitionCompleted(): void {
-    // implement if needed
-  }
+
 }
+
+bootstrap.whenDocumentReady().then(() => {
+  let element = document.getElementById("dashboard-container");
+  console.log(element, 'dashboard-container element')
+  ko.applyBindings(new DashboardViewModel(), element);
+});
 
 export = DashboardViewModel;

@@ -1,11 +1,18 @@
-<!--
- Copyright (c) 2014, 2021, Oracle and/or its affiliates.
- Licensed under The Universal Permissive License (UPL), Version 1.0
- as shown at https://oss.oracle.com/licenses/upl/
- -->
-<div class="oj-hybrid-padding">
+<div id="dashboard-container" class="oj-hybrid-padding">
   <h1>Dashboard module</h1>
-  <div>
-    I have changed the content of  src/ts/views/about
-  </div>
+  <h5>current id: <oj-bind-text value="[[getCurrentId()]]"></oj-bind-text>
+  </h5>
+  <oj-button id='button1' on-oj-action='[[clickEvent]]'>Click the button!</oj-button>
+  <oj-bind-for-each data="[[dataProvider]]">
+    <template>
+      <li class="oj-flex oj-sm-align-items-center">
+        <oj-bind-text value="[[$current.data.id]]"></oj-bind-text>.-
+        <oj-bind-text value="[[$current.data.value]]"></oj-bind-text>
+      </li>
+    </template>
+    <template slot="noData">
+      <div class="oj-typography-body-md oj-typography-bold oj-sm-padding-2x-top">No Users to display</div>
+    </template>
+  </oj-bind-for-each>
+  </ul>
 </div>
